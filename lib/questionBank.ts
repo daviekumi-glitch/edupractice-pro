@@ -1,4 +1,4 @@
-import { Question, DifficultyLevel } from './types';
+import { Question } from './types';
 
 // Sample question bank - in production this would come from database
 export const QUESTION_BANK: Question[] = [

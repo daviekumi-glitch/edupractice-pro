@@ -1,4 +1,4 @@
-import { PracticeSession, Question, PracticeMode, UserProgress, Subject } from './types';
+import { PracticeSession, PracticeMode, UserProgress, Subject } from './types';
 import { getRandomQuestions } from './questionBank';
 
 const STORAGE_KEYS = {

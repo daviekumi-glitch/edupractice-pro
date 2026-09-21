@@ -4,16 +4,10 @@ import Link from 'next/link';
 import { ArrowRight, Zap, Target, TrendingUp, Award, BookOpen, Brain } from 'lucide-react';
 import { SUBJECTS } from '@/lib/constants';
 import { PracticeService } from '@/lib/practiceService';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function HomePage() {
-  const [stats, setStats] = useState({
-    totalQuestions: 0,
-    accuracy: 0,
-    streak: 0
-  });
-
-  useEffect(() => {
+  const [stats, setStats] = useState(() => {
     const progress = PracticeService.getProgress();
     const allProgress = Object.values(progress);
     
@@ -22,8 +16,8 @@ export default function HomePage() {
     const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     const maxStreak = Math.max(...allProgress.map(p => p.streak), 0);
 
-    setStats({ totalQuestions, accuracy, streak: maxStreak });
-  }, []);
+    return { totalQuestions, accuracy, streak: maxStreak };
+  });
 
   return (
     <div className="space-y-12">

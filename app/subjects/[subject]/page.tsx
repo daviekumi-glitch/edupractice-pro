@@ -2,7 +2,7 @@
 
 import { use } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Play, Award, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Play } from 'lucide-react';
 import { SUBJECTS, TOPICS, PRACTICE_MODES } from '@/lib/constants';
 import { Subject } from '@/lib/types';
 import { PracticeService } from '@/lib/practiceService';

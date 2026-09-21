@@ -1,20 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { TrendingUp, Target, Zap, Award, BookOpen, Clock, Trophy } from 'lucide-react';
+import { TrendingUp, Target, Zap, Award, Trophy } from 'lucide-react';
 import { SUBJECTS } from '@/lib/constants';
 import { PracticeService } from '@/lib/practiceService';
 import { UserProgress, Subject, PracticeSession } from '@/lib/types';
 
 export default function ProgressPage() {
-  const [progress, setProgress] = useState<Record<Subject, UserProgress>>({} as Record<Subject, UserProgress>);
-  const [recentSessions, setRecentSessions] = useState<PracticeSession[]>([]);
-
-  useEffect(() => {
-    setProgress(PracticeService.getProgress());
-    setRecentSessions(PracticeService.getSessionHistory().slice(0, 5));
-  }, []);
+  const [progress, setProgress] = useState<Record<Subject, UserProgress>>(() => 
+    PracticeService.getProgress()
+  );
+  const [recentSessions, setRecentSessions] = useState<PracticeSession[]>(() => 
+    PracticeService.getSessionHistory().slice(0, 5)
+  );
 
   const allProgress = Object.values(progress);
   const totalQuestions = allProgress.reduce((sum, p) => sum + p.totalQuestions, 0);

@@ -6,14 +6,11 @@ import { ArrowLeft, Check, X, Clock, Trophy, ArrowRight } from 'lucide-react';
 import { TOPICS } from '@/lib/constants';
 import { PracticeService } from '@/lib/practiceService';
 import { PracticeSession } from '@/lib/types';
-import { useRouter } from 'next/navigation';
-
 export default function PracticePage({ 
   params 
 }: { 
   params: Promise<{ topicId: string }> 
 }) {
-  const router = useRouter();
   const { topicId } = use(params);
   
   const [session, setSession] = useState<PracticeSession | null>(null);
@@ -32,16 +29,20 @@ export default function PracticePage({
   useEffect(() => {
     if (!topic) return;
 
-    const existingSession = PracticeService.getCurrentSession();
-    if (existingSession && existingSession.topicId === topicId) {
-      setSession(existingSession);
-      // Find first unanswered question
-      const firstUnanswered = existingSession.answers.findIndex(a => a === null);
-      setCurrentQuestionIndex(firstUnanswered >= 0 ? firstUnanswered : 0);
-    } else {
-      const newSession = PracticeService.createSession(topicId, topic.subject, 'quiz', 10);
-      setSession(newSession);
-    }
+    const initializeSession = () => {
+      const existingSession = PracticeService.getCurrentSession();
+      if (existingSession && existingSession.topicId === topicId) {
+        setSession(existingSession);
+        // Find first unanswered question
+        const firstUnanswered = existingSession.answers.findIndex(a => a === null);
+        setCurrentQuestionIndex(firstUnanswered >= 0 ? firstUnanswered : 0);
+      } else {
+        const newSession = PracticeService.createSession(topicId, topic.subject, 'quiz', 10);
+        setSession(newSession);
+      }
+    };
+
+    initializeSession();
   }, [topicId, topic]);
 
   // Timer
