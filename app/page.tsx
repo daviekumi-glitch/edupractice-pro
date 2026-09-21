@@ -1,222 +1,254 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Zap, Target, TrendingUp, Award, BookOpen, Brain } from 'lucide-react';
-import { SUBJECTS } from '@/lib/constants';
-import { PracticeService } from '@/lib/practiceService';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  ArrowRight, Zap, Target, TrendingUp, Award, BookOpen, Brain,
+  Sparkles, Trophy, Clock, Users, CheckCircle, Star
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+const subjects = [
+  { name: 'Biology', icon: '🧬', color: 'from-green-500 to-emerald-600', questions: 500 },
+  { name: 'Physics', icon: '⚛️', color: 'from-blue-500 to-cyan-600', questions: 450 },
+  { name: 'Chemistry', icon: '⚗️', color: 'from-purple-500 to-pink-600', questions: 480 },
+  { name: 'Mathematics', icon: '📐', color: 'from-indigo-500 to-blue-600', questions: 520 },
+  { name: 'English', icon: '📚', color: 'from-orange-500 to-red-600', questions: 400 },
+  { name: 'Agriculture', icon: '🌾', color: 'from-lime-500 to-green-600', questions: 350 },
+];
+
+const features = [
+  { icon: Brain, title: 'AI-Powered Learning', desc: 'Adaptive questions based on your performance' },
+  { icon: Target, title: 'Personalized Goals', desc: 'Set and track your academic targets' },
+  { icon: TrendingUp, title: 'Progress Analytics', desc: 'Detailed insights into your improvement' },
+  { icon: Trophy, title: 'Gamification', desc: 'Earn badges and climb the leaderboard' },
+];
+
+const stats = [
+  { value: '10K+', label: 'Active Students', icon: Users },
+  { value: '2,700+', label: 'Practice Questions', icon: BookOpen },
+  { value: '95%', label: 'Success Rate', icon: CheckCircle },
+  { value: '4.9/5', label: 'Student Rating', icon: Star },
+];
 
 export default function HomePage() {
-  const [stats, setStats] = useState(() => {
-    const progress = PracticeService.getProgress();
-    const allProgress = Object.values(progress);
-    
-    const totalQuestions = allProgress.reduce((sum, p) => sum + p.totalQuestions, 0);
-    const totalCorrect = allProgress.reduce((sum, p) => sum + p.correctAnswers, 0);
-    const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-    const maxStreak = Math.max(...allProgress.map(p => p.streak), 0);
+  const [mounted, setMounted] = useState(false);
 
-    return { totalQuestions, accuracy, streak: maxStreak };
-  });
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
-    <div className="space-y-12">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="text-center space-y-6 pt-12 pb-8">
-        <div className="inline-block animate-fadeIn">
-          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4 rounded-2xl shadow-xl">
-            <Brain className="w-16 h-16 text-white" />
+      <section className="relative overflow-hidden bg-gradient-radial bg-grid-pattern py-20 md:py-32">
+        <div className="container-custom">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left Column */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
+            >
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm font-semibold">Premium Learning Platform</span>
+              </motion.div>
+              
+              <h1 className="text-display font-bold leading-tight">
+                Master Your{' '}
+                <span className="gradient-text">Academic Goals</span>
+                {' '}with AI-Powered Practice
+              </h1>
+              
+              <p className="text-body text-text-secondary max-w-xl">
+                Practice thousands of questions across Biology, Physics, Chemistry, Mathematics, 
+                English, and Agriculture. Track your progress, compete with peers, and achieve excellence.
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <Link href="/subjects">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="btn-primary"
+                  >
+                    Start Practicing
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.button>
+                </Link>
+                
+                <Link href="/progress">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="btn-secondary"
+                  >
+                    View Demo
+                    <Zap className="w-5 h-5" />
+                  </motion.button>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Right Column - Animated Cards */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="relative hidden md:block"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                {features.slice(0, 4).map((feature, i) => {
+                  const Icon = feature.icon;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 + i * 0.1 }}
+                      whileHover={{ scale: 1.05, rotate: 2 }}
+                      className="card-glass p-6 space-y-3"
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="font-bold text-text-primary">{feature.title}</h3>
+                      <p className="text-sm text-text-muted">{feature.desc}</p>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </div>
         </div>
-        
-        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent animate-fadeIn">
-          Master 6 Subjects with AI
-        </h1>
-        
-        <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto animate-fadeIn">
-          Practice Biology, Physics, Chemistry, English, Mathematics, and Agriculture 
-          with intelligent quizzes, flashcards, and real-time progress tracking
-        </p>
 
-        <div className="flex flex-wrap justify-center gap-4 pt-4">
-          <Link
-            href="/subjects"
-            className="group flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all hover:scale-105"
-          >
-            <BookOpen className="w-5 h-5" />
-            <span>Start Practicing</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          
-          <Link
-            href="/progress"
-            className="flex items-center space-x-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-8 py-4 rounded-xl font-semibold border-2 border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all hover:scale-105"
-          >
-            <TrendingUp className="w-5 h-5" />
-            <span>View Progress</span>
-          </Link>
-        </div>
+        {/* Floating Elements */}
+        <motion.div
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute top-20 right-20 w-20 h-20 bg-primary/10 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="absolute bottom-20 left-20 w-32 h-32 bg-secondary/10 rounded-full blur-3xl"
+        />
       </section>
 
       {/* Stats Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 card-hover">
-          <div className="flex items-center space-x-4">
-            <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl">
-              <Target className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.totalQuestions}</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Questions Answered</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 card-hover">
-          <div className="flex items-center space-x-4">
-            <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-xl">
-              <TrendingUp className="w-8 h-8 text-green-600 dark:text-green-400" />
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.accuracy}%</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Overall Accuracy</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 card-hover">
-          <div className="flex items-center space-x-4">
-            <div className="bg-orange-100 dark:bg-orange-900/30 p-3 rounded-xl">
-              <Zap className="w-8 h-8 text-orange-600 dark:text-orange-400" />
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.streak}</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Day Streak</p>
-            </div>
+      <section className="py-16 bg-surface/30">
+        <div className="container-custom">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="card-premium text-center space-y-3"
+                >
+                  <Icon className="w-8 h-8 mx-auto text-primary" />
+                  <div className="text-3xl font-bold gradient-text">{stat.value}</div>
+                  <div className="text-sm text-text-muted">{stat.label}</div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Subjects Grid */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-            Choose Your Subject
-          </h2>
-          <Link
-            href="/subjects"
-            className="text-blue-600 dark:text-blue-400 hover:underline flex items-center space-x-1"
+      {/* Subjects Section */}
+      <section className="py-20">
+        <div className="container-custom space-y-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center space-y-4"
           >
-            <span>View All</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+            <h2 className="text-heading gradient-text">Explore All Subjects</h2>
+            <p className="text-body text-text-secondary max-w-2xl mx-auto">
+              Choose from our comprehensive question bank covering 6 major subjects
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SUBJECTS.map((subject, index) => {
-            const progress = PracticeService.getSubjectProgress(subject.id);
-            
-            return (
-              <Link
-                key={subject.id}
-                href={`/subjects/${subject.id}`}
-                className="group bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 card-hover"
-                style={{ animationDelay: `${index * 100}ms` }}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {subjects.map((subject, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.05, rotate: 1 }}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`${subject.color} p-3 rounded-xl text-3xl`}>
-                    {subject.icon}
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
-                </div>
-
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  {subject.name}
-                </h3>
-                
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                  {subject.description}
-                </p>
-
-                {progress && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600 dark:text-slate-400">Progress</span>
-                      <span className="font-semibold text-slate-900 dark:text-white">
-                        Level {progress.level}
-                      </span>
+                <Link href={`/subjects/${subject.name.toLowerCase()}`}>
+                  <div className="card-glass group cursor-pointer overflow-hidden">
+                    <div className={`h-2 bg-gradient-to-r ${subject.color}`} />
+                    <div className="p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-4xl">{subject.icon}</span>
+                        <motion.div
+                          whileHover={{ scale: 1.2, rotate: 90 }}
+                          className="w-10 h-10 bg-surface-light rounded-full flex items-center justify-center"
+                        >
+                          <ArrowRight className="w-5 h-5 text-primary" />
+                        </motion.div>
+                      </div>
+                      <h3 className="text-xl font-bold text-text-primary">{subject.name}</h3>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-text-muted">{subject.questions}+ Questions</span>
+                        <span className="badge badge-primary">Start Practice</span>
+                      </div>
                     </div>
-                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                      <div
-                        className={`${subject.color} h-2 rounded-full transition-all`}
-                        style={{ width: `${Math.min((progress.experience % 1000) / 10, 100)}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {progress.totalQuestions} questions • {progress.accuracy}% accuracy
-                    </p>
                   </div>
-                )}
-
-                {!progress && (
-                  <div className="pt-2">
-                    <span className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium px-3 py-1 rounded-full">
-                      Start Learning
-                    </span>
-                  </div>
-                )}
-              </Link>
-            );
-          })}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 rounded-3xl p-8 md:p-12">
-        <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-8">
-          Why Choose EduPractice Pro?
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="text-center space-y-3">
-            <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-              <Brain className="w-8 h-8 text-blue-600" />
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="card-glass max-w-4xl mx-auto text-center p-12 space-y-6"
+          >
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto animate-pulse-glow">
+              <Trophy className="w-10 h-10 text-white" />
             </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">AI-Powered</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Intelligent question generation tailored to your level
+            <h2 className="text-heading">Ready to Excel in Your Studies?</h2>
+            <p className="text-body text-text-secondary max-w-2xl mx-auto">
+              Join thousands of students who are achieving their academic goals with EduPractice Pro
             </p>
-          </div>
-
-          <div className="text-center space-y-3">
-            <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-              <Target className="w-8 h-8 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">Personalized</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Adaptive learning paths based on your performance
-            </p>
-          </div>
-
-          <div className="text-center space-y-3">
-            <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-              <TrendingUp className="w-8 h-8 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">Track Progress</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Detailed analytics and progress visualization
-            </p>
-          </div>
-
-          <div className="text-center space-y-3">
-            <div className="bg-white dark:bg-slate-800 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-              <Award className="w-8 h-8 text-orange-600" />
-            </div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">Achievements</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Earn badges and climb the leaderboard
-            </p>
-          </div>
+            <Link href="/subjects">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-primary text-lg px-8 py-4"
+              >
+                Get Started for Free
+                <Sparkles className="w-5 h-5" />
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>
